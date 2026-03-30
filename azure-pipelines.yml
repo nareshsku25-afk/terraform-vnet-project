@@ -3,7 +3,7 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-:trigger:
+trigger:
 - main
 
 pool:
@@ -15,42 +15,37 @@ stages:
   - job: Terraform_Deploy
     steps:
 
-    # Install Terraform
     - task: TerraformInstaller@1
       inputs:
         terraformVersion: 'latest'
 
-    # Init
     - task: TerraformTaskV4@4
-      displayName: "Terraform Init"
+      displayName: Init
       inputs:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    # Validate
     - task: TerraformTaskV4@4
-      displayName: "Terraform Validate"
+      displayName: Validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    # Plan
     - task: TerraformTaskV4@4
-      displayName: "Terraform Plan"
+      displayName: Plan
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        environmentServiceNameAzureRM: '<your-service-connection>'
+        environmentServiceNameAzureRM: 'azure-service-conn'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    # Apply
     - task: TerraformTaskV4@4
-      displayName: "Terraform Apply"
+      displayName: Apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        environmentServiceNameAzureRM: '<your-service-connection>'
+        environmentServiceNameAzureRM: 'azure-service-conn'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
 
