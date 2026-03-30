@@ -3,45 +3,54 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
+:trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
-variables:
-  terraformVersion: '1.6.0'
+stages:
+- stage: Deploy
+  jobs:
+  - job: Terraform_Deploy
+    steps:
 
-steps:
+    # Install Terraform
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
 
-- task: TerraformInstaller@1
-  displayName: Install Terraform
-  inputs:
-    terraformVersion: $(terraformVersion)
+    # Init
+    - task: TerraformTaskV4@4
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-- task: AzureCLI@2
-  displayName: Terraform Init
-  inputs:
-    azureSubscription: 'Azure-Service-Connection'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      terraform init
+    # Validate
+    - task: TerraformTaskV4@4
+      displayName: "Terraform Validate"
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-- task: AzureCLI@2
-  displayName: Terraform Plan
-  inputs:
-    azureSubscription: 'Azure-Service-Connection'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      terraform plan
+    # Plan
+    - task: TerraformTaskV4@4
+      displayName: "Terraform Plan"
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: '<your-service-connection>'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-- task: AzureCLI@2
-  displayName: Terraform Apply
-  inputs:
-    azureSubscription: 'Azure-Service-Connection'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      terraform apply -auto-approve
+    # Apply
+    - task: TerraformTaskV4@4
+      displayName: "Terraform Apply"
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: '<your-service-connection>'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
