@@ -24,7 +24,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        environmentServiceNameAzureRM: 'azure-service-conn'
+        environmentServiceNameAzureRM: 'nareshsku25-afk'
 
     - task: TerraformTaskV4@4
       displayName: Validate
@@ -37,12 +37,12 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        environmentServiceNameAzureRM: 'azure-service-conn'
+        environmentServiceNameAzureRM: 'nareshsku25-afk'
 
     - task: TerraformTaskV4@4
       displayName: Apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        environmentServiceNameAzureRM: 'azure-service-conn'
+        environmentServiceNameAzureRM: 'nareshsku25-afk'
 
