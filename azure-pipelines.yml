@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ununtu-latest'   # self-hosted agent
+  name: 'Default'   # self-hosted agent
 
 stages:
 - stage: Deploy
